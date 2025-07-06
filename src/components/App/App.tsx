@@ -38,8 +38,8 @@ function App() {
       }
     } catch (error) {
       console.error("Fetch error:", error);
-      setError("Сталася помилка при завантаженні фільмів.");
-      toast.error("Сталася помилка при завантаженні фільмів.");
+      setError("Unable to load movies. Please try again later.");
+      toast.error("Unable to load movies. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -50,11 +50,9 @@ function App() {
       <Toaster />
       <SearchBar onSubmit={handleFetchMovies} />
 
-      {error ? (
-        <ErrorMessage />
-      ) : loading ? (
-        <Loader />
-      ) : (
+      {loading && <Loader />}
+      {error && <ErrorMessage />}
+      {!loading && !error && (
         <>
           <MovieGrid movies={movies} onSelect={handleSelect} />
           {selectedMovie && (
