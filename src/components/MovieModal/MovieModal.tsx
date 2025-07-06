@@ -50,7 +50,7 @@ export default function MovieModal({ movie, onClose }: MovieModalProps) {
         </button>
         <img
           src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-          alt={movie.title}
+          alt={movie.backdrop_path ? movie.title : "No image available❕"}
           className={css.image}
         />
         <div className={css.content}>

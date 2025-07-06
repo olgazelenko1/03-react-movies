@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios, { type AxiosResponse } from "axios";
 import type { Movie } from "../../types/movie";
 import toast, { Toaster } from "react-hot-toast";
 import Loader from "../Loader/Loader";
@@ -7,9 +6,8 @@ import MovieGrid from "../MovieGrid/MovieGrid";
 import SearchBar from "../SearchBar/SearchBar";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import MovieModal from "../MovieModal/MovieModal";
+import { fetchMovies } from "../../services/movieService";
 import styles from "./App.module.css";
-
-const API_TOKEN = import.meta.env.VITE_TMDB_TOKEN;
 
 function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -20,7 +18,7 @@ function App() {
   const handleSelect = (movie: Movie) => setSelectedMovie(movie);
   const handleCloseModal = () => setSelectedMovie(null);
 
-  const fetchMovies = async (query: string) => {
+  const handleFetchMovies = async (query: string) => {
     if (!query.trim()) {
       toast.error("Please enter your search query.");
       return;
@@ -29,21 +27,17 @@ function App() {
     try {
       setError(null);
       setLoading(true);
-      const response: AxiosResponse<{ results: Movie[] }> = await axios.get(
-        "https://api.themoviedb.org/3/search/movie",
-        {
-          params: { query, language: "en-US", include_adult: false },
-          headers: { Authorization: `Bearer ${API_TOKEN}` },
-        }
-      );
 
-      if (response.data.results.length === 0) {
+      const results = await fetchMovies(query);
+
+      if (results.length === 0) {
         toast.error("No movies found for your request.");
         setMovies([]);
       } else {
-        setMovies(response.data.results);
+        setMovies(results);
       }
-    } catch {
+    } catch (error) {
+      console.error("Fetch error:", error);
       setError("Сталася помилка при завантаженні фільмів.");
       toast.error("Сталася помилка при завантаженні фільмів.");
     } finally {
@@ -54,7 +48,7 @@ function App() {
   return (
     <div className={styles.container}>
       <Toaster />
-      <SearchBar onSubmit={fetchMovies} />
+      <SearchBar onSubmit={handleFetchMovies} />
 
       {error ? (
         <ErrorMessage />
@@ -71,4 +65,5 @@ function App() {
     </div>
   );
 }
+
 export default App;
