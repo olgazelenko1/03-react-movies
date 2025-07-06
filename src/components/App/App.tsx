@@ -1,12 +1,12 @@
 import { useState } from "react";
 import axios, { type AxiosResponse } from "axios";
-import type { Movie } from "../types/movie";
+import type { Movie } from "../../types/movie";
 import toast, { Toaster } from "react-hot-toast";
-import Loader from "./Loader/Loader";
-import MovieGrid from "./MovieGrid/MovieGrid";
-import SearchBar from "./SearchBar/SearchBar";
-import ErrorMessage from "./ErrorMessage/ErrorMessage";
-import MovieModal from "./MovieModal/MovieModal";
+import Loader from "../Loader/Loader";
+import MovieGrid from "../MovieGrid/MovieGrid";
+import SearchBar from "../SearchBar/SearchBar";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import MovieModal from "../MovieModal/MovieModal";
 import styles from "./App.module.css";
 
 const API_TOKEN = import.meta.env.VITE_TMDB_TOKEN;
@@ -61,14 +61,14 @@ function App() {
       ) : loading ? (
         <Loader />
       ) : (
-        <MovieGrid movies={movies} onSelect={handleSelect} />
-      )}
-
-      {selectedMovie && (
-        <MovieModal movie={selectedMovie} onClose={handleCloseModal} />
+        <>
+          <MovieGrid movies={movies} onSelect={handleSelect} />
+          {selectedMovie && (
+            <MovieModal movie={selectedMovie} onClose={handleCloseModal} />
+          )}
+        </>
       )}
     </div>
   );
 }
-
 export default App;

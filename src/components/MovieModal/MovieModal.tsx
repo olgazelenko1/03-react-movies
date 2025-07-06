@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import css from "./MovieModal.module.css";
-import type { Movie } from "../../types/movie"; // переконайся, що назва файлу з маленької
+import type { Movie } from "../../types/movie";
 
 interface MovieModalProps {
   movie: Movie;
@@ -11,7 +11,6 @@ interface MovieModalProps {
 const modalRoot = document.getElementById("modal-root")!;
 
 export default function MovieModal({ movie, onClose }: MovieModalProps) {
-  // Закриття по клавіші Escape
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -20,15 +19,14 @@ export default function MovieModal({ movie, onClose }: MovieModalProps) {
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    document.body.style.overflow = "hidden"; // блокуємо скрол
+    document.body.style.overflow = "hidden";
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = ""; // відновлюємо скрол
+      document.body.style.overflow = "";
     };
   }, [onClose]);
 
-  // Закриття по кліку на backdrop
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       onClose();
